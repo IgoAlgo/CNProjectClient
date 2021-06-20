@@ -1,14 +1,14 @@
 import React from 'react';
-import styled, {css } from 'styled-components';
+import styled from 'styled-components';
 
 type Props = {
-    currentPage: number;
+
   postsPerPage: number;
   totalPosts: number;
   setCurrentPage: (currentPage: number) => void;
 };
 export default function Pagination({
-  currentPage, postsPerPage,
+  postsPerPage,
   totalPosts,
   setCurrentPage,
 }: Props): JSX.Element {

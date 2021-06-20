@@ -12,7 +12,11 @@ export default function BulletinBoard(): JSX.Element {
  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   
-  const [postsPerPage, setPostsPerPage] = useState(5);
+  const [postsPerPage] = useState(5);
+
+
+
+
   // const pagignationNumber = useState(5);
   const [inputModalInfo, setInputModalInfo] = useState({
     isInputModal: false,
@@ -123,7 +127,7 @@ useEffect(() => {
               // messages={messages}
             />
             <Pagination
-              currentPage={currentPage}
+  
               postsPerPage={postsPerPage}
               totalPosts={posts.length}
               setCurrentPage={setCurrentPage}

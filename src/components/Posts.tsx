@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PostModal from 'components/PostModal';
+import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -67,7 +66,7 @@ export default function Posts({
 }: Props): JSX.Element {
   const getPostInfo = async (id: number) => {
     const res = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
-    console.log(res);
+  
 
     setPostInfo({
       isPostModal: true,
@@ -112,10 +111,10 @@ export default function Posts({
   const deletePost = async (id: number) => {
     // url에 id값을 넣어서? 두 번쨰 파라미터로 넣어서?
 
-    const res = await axios.delete(
+    await axios.delete(
       `https://jsonplaceholder.typicode.com/posts/${id}`,
     );
-    console.log(res);
+ 
 
     // setMessages();
   };
@@ -126,22 +125,20 @@ export default function Posts({
 
       <PostListWrapper>
         {posts.map((post) => (
-          <>
-            <PostList>
-              <PostContent key={post.id} onClick={() => getPostInfo(post.id)}>
-                {post.title}
-              </PostContent>
+          <PostList key={post.id}>
+            <PostContent onClick={() => getPostInfo(post.id)}>
+              {post.title}
+            </PostContent>
 
-              <EditButton onClick={() => editPost(post.id)}>수정</EditButton>
-              <DeleteButton
-                onClick={() => {
-                  deletePost(post.id);
-                }}
-              >
-                X
-              </DeleteButton>
-            </PostList>
-          </>
+            <EditButton onClick={() => editPost(post.id)}>수정</EditButton>
+            <DeleteButton
+              onClick={() => {
+                deletePost(post.id);
+              }}
+            >
+              X
+            </DeleteButton>
+          </PostList>
         ))}
       </PostListWrapper>
     </>

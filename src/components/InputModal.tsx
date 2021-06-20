@@ -51,10 +51,10 @@ export default function PostModal({
     // event handler
     e.preventDefault();
 
-    // res type은 무슨 값으로 지정?
-    let res: any;
+ 
+    
     if (inputModalInfo.mode === 'CREATE') {
-      res = await axios.post(
+      await axios.post(
         `https://jsonplaceholder.typicode.com/posts`,
         {
           title,
@@ -62,12 +62,11 @@ export default function PostModal({
         },
       );
     } else if (inputModalInfo.mode === 'EDIT') {
-      res = await axios.patch(
+      await axios.patch(
         `https://jsonplaceholder.typicode.com/posts/${inputModalInfo.id}`,
         { title, content },
       );
     }
-    console.log(res);
     setInputModalInfo({
       isInputModal: false,
       mode: '',

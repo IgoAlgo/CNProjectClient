@@ -5,6 +5,7 @@ import mail from 'assets/images/mail.png';
 import profilephoto from 'assets/images/profilephoto.png';
 import Header from 'components/Header';
 import ApiModal from 'components/ApiModal';
+import { Link } from 'react-router-dom';
 
 export default function Home(): JSX.Element {
 
@@ -32,7 +33,9 @@ export default function Home(): JSX.Element {
                 <TextLink onClick={() => setIsApiModal(true)}>
                   REST API 명세서
                 </TextLink>
-                <TextLink>게시판 바로 가기</TextLink>
+                <Link to="/bulletinboard"> 
+                  <TextLink>게시판 바로 가기</TextLink>
+                  </Link>
               </TextLinkWrapper>
             </Block>
           </ToggleWrapper>
@@ -45,13 +48,13 @@ export default function Home(): JSX.Element {
                 <Profile>
                   <ProfilePhoto src={profilephoto} />
                   <ProfileInfo>
-                    전애지 <InfoLogo src={github} /> <InfoLogo src={mail} />
+                    전애지 <a href="https://github.com/AEJIJEON"><InfoLogo src={github} /> </a><InfoLogo src={mail} />
                   </ProfileInfo>
                 </Profile>
                 <Profile>
                   <ProfilePhoto src={profilephoto} />
                   <ProfileInfo>
-                    김진영 <InfoLogo src={github} /> <InfoLogo src={mail} />
+                    김진영 <a href="https://github.com/gimquokka"><InfoLogo src={github} /> </a><InfoLogo src={mail} />
                   </ProfileInfo>
                 </Profile>
               </ProfileWrapper>

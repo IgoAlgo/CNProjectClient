@@ -1,13 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import home from 'assets/images/home.png';
+import { Link } from 'react-router-dom';
 
 export default function Header(): JSX.Element {
-    return <Container>
+  return <Container>
+      <Link to="/"> 
       <HomeWrapper>
         <Logo src={home} />
         <Text>HOME</Text>
       </HomeWrapper>
+      </Link>
     </Container>;
 }
 
