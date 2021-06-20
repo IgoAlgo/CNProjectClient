@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import styled from 'styled-components';
 import Header from 'components/Header';
 import Posts from 'components/Posts';
@@ -12,7 +12,7 @@ export default function BulletinBoard(): JSX.Element {
  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   
-  const [postsPerPage] = useState(5);
+  const [postsPerPage] = useState(4);
 
 
 
@@ -30,6 +30,20 @@ export default function BulletinBoard(): JSX.Element {
       postTitle: '',
       postContent: '',
     });
+  interface Data{
+    title: string;
+    content: string;
+  }
+  interface User {
+    id: number;
+    url: string | undefined;
+    method: string | undefined;
+    data: Data[];
+  }
+  
+  const [messages, setMessages] = useState<User[]>([
+  ]);
+  const [nextId, setNextId] = useState(1);
 //   const [messages, setMessages] = useState([
 //     {
 //       // request: {
@@ -60,20 +74,27 @@ export default function BulletinBoard(): JSX.Element {
   
   const getPost = async () => {
     setLoading(true);
-    const res = await axios.get(
-      'https://jsonplaceholder.typicode.com/posts',
+    const res  = await axios.get(
+      'http://ec2-13-125-230-2.ap-northeast-2.compute.amazonaws.com:8080/posts',
     );
     // console.log(res);
+
+
+
     setPosts(res.data);
     setLoading(false);
-    // const res2 = await axios.post(
-    //   'https://8f0ckx1j1k.execute-api.us-east-2.amazonaws.com/test/pets',
-    //   {
-    //     type: 'fish',
-    //     price: 0.99, 
-    //   },
-    // );
-    // console.log(res2);
+
+
+
+    setMessages(
+      messages.concat({
+        id: nextId,
+        url: res.config.url,
+        method: res.config.method,
+        data: res.data,
+      }),
+    );
+    setNextId(nextId + 1);
   }
 
 
@@ -87,7 +108,7 @@ useEffect(() => {
     userId: number;
     id: number;
     title: string;
-    body: string;
+    content: string;
   };
 
 
@@ -121,13 +142,14 @@ useEffect(() => {
             <Posts
               posts={currentPosts(posts)}
               loading={loading}
-              setPostInfo={setPostInfo}
+              // setPostInfo={setPostInfo}
               setInputModalInfo={setInputModalInfo}
-              // setMessages={setMessages}
-              // messages={messages}
+              setMessages={setMessages}
+              messages={messages}
+              nextId={nextId}
+              setNextId={setNextId}
             />
             <Pagination
-  
               postsPerPage={postsPerPage}
               totalPosts={posts.length}
               setCurrentPage={setCurrentPage}
@@ -141,13 +163,26 @@ useEffect(() => {
           </MessageHeaderWrapper>
           <MessageWrapper>
             <MessageListWrapper>
-              {/* {messages.map((message) => (
-                <div>{message}</div>
-              ))} */}
-              <MessageList>request message 1</MessageList>
-              <MessageList>response message 1</MessageList>
-              <MessageList>request message 2</MessageList>
-              <MessageList>response message 2</MessageList>
+              {messages.map((mes) => (
+                <MessageList key={mes.id}>
+                  <div>method: {mes.method}</div>
+                  <div>
+                    {' '}
+                    url:
+                    {mes.url}
+                  </div>
+                  {mes.data && (
+                    <div>
+                      data:
+                      {mes.data.map((d) => (
+                        <div>
+                          {'{'}title:{d.title}, content: {d.content} {'}'}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </MessageList>
+              ))}
             </MessageListWrapper>
           </MessageWrapper>
         </MessageContainer>
@@ -156,7 +191,10 @@ useEffect(() => {
         <InputModal
           inputModalInfo={inputModalInfo}
           setInputModalInfo={setInputModalInfo}
-          // setMessages={setMessages}
+          messages={messages}
+          setMessages={setMessages}
+          nextId={nextId}
+          setNextId={setNextId}
         />
       )}
       {postInfo.isPostModal && (
@@ -208,7 +246,7 @@ const MessageListWrapper = styled.ul`
 `;
 const MessageList = styled.li`
  
-  text-align: center;
+  // text-align: center;
 `;
 
 const BoardHeader = styled.span`

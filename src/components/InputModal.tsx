@@ -2,10 +2,24 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+ interface Data {
+   title: string;
+   content: string;
+ }
+interface User {
+  id: number;
+    url: string | undefined;
+    method: string | undefined;
+    data: Data[];
+  }
 type Props = {
   inputModalInfo: InputInfo;
   setInputModalInfo: (para: InputInfo) => void;
   // setMessages: (para: Message[]) => void;
+  messages: User[];
+  setMessages: (para: User[]) => void;
+  nextId: number;
+  setNextId: (para: number) => void;
 };
 
 type InputInfo = {
@@ -38,32 +52,37 @@ type InputInfo = {
 //   response: Response;
 // };
 
-export default function PostModal({
+export default function InputModal({
   inputModalInfo,
   setInputModalInfo,
-  // setMessages,
+  messages,
+  setMessages,
+  nextId,
+          setNextId
 }: Props): JSX.Element {
   const [title, setTitle] = useState(inputModalInfo.postTitle);
   const [content, setContent] = useState(inputModalInfo.postContent);
 
 
-  const savePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const savePost = async () => {
     // event handler
-    e.preventDefault();
+    // e.preventDefault();
 
  
-    
+    let res = {
+      config: { url: "", method: ""},
+      data: []
+    };
     if (inputModalInfo.mode === 'CREATE') {
-      await axios.post(
-        `https://jsonplaceholder.typicode.com/posts`,
+      res = await axios.post(
+        `http://ec2-13-125-230-2.ap-northeast-2.compute.amazonaws.com:8080/posts`,
         {
           title,
-          content,
-        },
+          content},
       );
     } else if (inputModalInfo.mode === 'EDIT') {
-      await axios.patch(
-        `https://jsonplaceholder.typicode.com/posts/${inputModalInfo.id}`,
+      res = await axios.put(
+        `http://ec2-13-125-230-2.ap-northeast-2.compute.amazonaws.com:8080/posts/${inputModalInfo.id}`,
         { title, content },
       );
     }
@@ -74,8 +93,16 @@ export default function PostModal({
       postTitle: '',
       postContent: '',
     });
-
-    // setMessages();
+      setMessages(
+        messages.concat({
+            id: nextId,
+            url: res.config.url,
+            method: res.config.method,
+            data: res.data,
+          }),
+    );
+    setNextId(nextId + 1);
+    // window.location.reload();
   };
 
   return (
@@ -106,7 +133,7 @@ export default function PostModal({
             >
               취소
             </CancelButton>
-            <SaveButton onClick={(e) => savePost(e)}>저장</SaveButton>
+            <SaveButton onClick={() => savePost()}>저장</SaveButton>
           </ButtonWrapper>
         </InputWrapper>
 
