@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import github from 'assets/images/github.png';
 import mail from 'assets/images/mail.png';
 import profilephoto from 'assets/images/profilephoto.png';
 import Header from 'components/Header';
-import ApiModal from 'components/ApiModal';
 import { Link } from 'react-router-dom';
 
 export default function Home(): JSX.Element {
-
-  const [isApiModal, setIsApiModal] = useState(false);
 
   return (
     <Container>
@@ -23,19 +20,26 @@ export default function Home(): JSX.Element {
             </Toggle>
             <Block>
               <TextContent>
-                Computer Networking PROJECT in GIST college REST API를 활용하여
-                실제로 네트워크상에서의 Client와 Server 간의 소통시 주고 받은
-                JSON 형태의 request/response 메세지를 실시간으로 확인할 수 있는
-                웹 사이트 입니다. 게시판에서 글을 읽고, 작성하고, 수정하고,
-                삭제해보며 실시간으로 request/response 메세지를 확인해보세요.
+                <h1>Computer Networking PROJECT in GIST</h1>
+                <div>
+                  <div>
+                    - REST API를 활용하여 실제로 네트워크상에서의 Client와
+                    Server 간의 소통시 주고 받은 JSON 형태의 request/response
+                    메세지를 실시간으로 확인할 수 있는 웹 사이트 입니다.{' '}
+                  </div>
+                  <div>
+                    - 게시판에서 글을 읽고, 작성하고, 수정하고, 삭제해보며
+                    실시간으로 request/response 메세지를 확인해보세요.
+                  </div>
+                </div>
               </TextContent>
               <TextLinkWrapper>
-                <TextLink onClick={() => setIsApiModal(true)}>
-                  REST API 명세서
-                </TextLink>
-                <Link to="/bulletinboard"> 
+                <a href="https://github.com/IgoAlgo/cn-project-server/blob/master/README.md">
+                  <TextLink>REST API 명세서</TextLink>
+                </a>
+                <Link to="/bulletinboard">
                   <TextLink>게시판 바로 가기</TextLink>
-                  </Link>
+                </Link>
               </TextLinkWrapper>
             </Block>
           </ToggleWrapper>
@@ -48,13 +52,21 @@ export default function Home(): JSX.Element {
                 <Profile>
                   <ProfilePhoto src={profilephoto} />
                   <ProfileInfo>
-                    전애지 <a href="https://github.com/AEJIJEON"><InfoLogo src={github} /> </a><InfoLogo src={mail} />
+                    전애지{' '}
+                    <a href="https://github.com/AEJIJEON">
+                      <InfoLogo src={github} />{' '}
+                    </a>
+                    <InfoLogo src={mail} />
                   </ProfileInfo>
                 </Profile>
                 <Profile>
                   <ProfilePhoto src={profilephoto} />
                   <ProfileInfo>
-                    김진영 <a href="https://github.com/gimquokka"><InfoLogo src={github} /> </a><InfoLogo src={mail} />
+                    김진영{' '}
+                    <a href="https://github.com/gimquokka">
+                      <InfoLogo src={github} />{' '}
+                    </a>
+                    <InfoLogo src={mail} />
                   </ProfileInfo>
                 </Profile>
               </ProfileWrapper>
@@ -62,21 +74,18 @@ export default function Home(): JSX.Element {
           </ToggleWrapper>
         </ContentWrapper>
       </Body>
-      {isApiModal && <ApiModal setIsApiModal={setIsApiModal}/>}
     </Container>
   );
     
 }
 
 const TextContent = styled.div`
-// display: flex;
 border: 1px solid white;
 `;
 
 const ProfileWrapper = styled.div`
   border: 3px solid red;
   display: flex;
-  // justify-content: center;
   align-items: center;
   justify-content: space-around;
   width: 400px;
@@ -86,7 +95,6 @@ const Profile = styled.div`
   border: 3px solid red;
   display: flex;
   flex-direction: column;
-  // margin: 20px;
 `;
 const ProfilePhoto = styled.img`
   border: 3px solid red;
@@ -105,12 +113,8 @@ const ProfileInfo = styled.div`
   font-weight: bold;
 `;
 const TextLinkWrapper = styled.div`
-  // display: inline-block;
 
   border: 2px solid black;
-  // flex-direction: column;
-  // align-items: center;
-  // margin-bottom: auto;
 `;
 const TextLink = styled.div`
 
@@ -168,7 +172,6 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  // text-align: center;
 `;
 
 const InfoLogo = styled.img`

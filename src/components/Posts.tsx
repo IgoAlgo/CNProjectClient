@@ -4,16 +4,15 @@ import axios from 'axios';
 
 
 type Post = {
-    userId: number,
     id: number,
     title: string,
-    body: string
+    content: string
 }
-type PostInfo = {
-  isPostModal: boolean;
-  postTitle: string;
-  postContent: string;
-};
+// type PostInfo = {
+//   isPostModal: boolean;
+//   postTitle: string;
+//   postContent: string;
+// };
 type InputInfo = {
   isInputModal: boolean;
   mode: string;
@@ -42,37 +41,52 @@ type InputInfo = {
 
 //   data: Post;
 // };
+
 // type Message = {
-//   // request: Request;
-//   response: Response;
+
+//   method: string | undefined;
 // };
+ interface Data {
+   title: string;
+   content: string;
+ }
+interface User {
+  id: number;
+   url: string | undefined;
+   method: string | undefined;
+   data: Data[];
+ }
 type Props = {
   posts: Post[];
   loading: boolean;
-  setPostInfo: (info: PostInfo) => void;
+  // setPostInfo: (info: PostInfo) => void;
   setInputModalInfo: (para: InputInfo) => void;
   // (para: Message[])로 하면 type error .. 초기값이 empty array로 할당돼서 error 뜨는 듯
-  // setMessages: (para: Message[]) => void;
-  // messages: Message[];
+  setMessages: (para: User[]) => void;
+  messages: User[];
+  nextId: number;
+  setNextId: (para: number) => void;
 };
 
 export default function Posts({
   posts,
   loading,
-  setPostInfo,
+  // setPostInfo,
   setInputModalInfo,
-  // setMessages,
-  // messages
+  setMessages,
+  messages,
+  nextId,
+  setNextId
 }: Props): JSX.Element {
-  const getPostInfo = async (id: number) => {
-    const res = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
+  // const getPostInfo = async (id: number) => {
+  //   const res = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
   
 
-    setPostInfo({
-      isPostModal: true,
-      postTitle: res.data.title,
-      postContent: res.data.body,
-    });
+  //   setPostInfo({
+  //     isPostModal: true,
+  //     postTitle: res.data.title,
+  //     postContent: res.data.body,
+  //   });
 
     // setMessages(
     //   messages.concat({
@@ -93,30 +107,42 @@ export default function Posts({
     //   }),
     // );
     // setMessages(messages.concat(1));
-  };
+  // };
 
-  const editPost = async (id: number) => {
-    const res = await axios.get(
-      `https://jsonplaceholder.typicode.com/posts/${id}`,
-    );
+  const editPost = async (id: number, title: string, content: string) => {
+
     setInputModalInfo({
       isInputModal: true,
       mode: 'EDIT',
       id,
-      postTitle: res.data.title,
-      postContent: res.data.body,
+      postTitle: title,
+      postContent: content,
     });
     // setMessages();
   };
   const deletePost = async (id: number) => {
     // url에 id값을 넣어서? 두 번쨰 파라미터로 넣어서?
 
-    await axios.delete(
-      `https://jsonplaceholder.typicode.com/posts/${id}`,
+    const res = await axios.delete(
+      `http://ec2-13-125-230-2.ap-northeast-2.compute.amazonaws.com:8080/posts/${id}`,
     );
- 
-
-    // setMessages();
+    setMessages(
+      messages.concat({
+        id: nextId,
+        url: res.config.url,
+        method: res.config.method,
+        data: res.data,
+      }),
+    );
+    setNextId(nextId + 1);
+    // console.log(res);
+    // setMessages(
+    //   messages.concat({
+    //     url: res.config.url,
+    //     method: res.config.method
+    //   }),
+    // );
+    // window.location.reload();
   };
 
   return (
@@ -126,11 +152,13 @@ export default function Posts({
       <PostListWrapper>
         {posts.map((post) => (
           <PostList key={post.id}>
-            <PostContent onClick={() => getPostInfo(post.id)}>
-              {post.title}
+            {/* <PostContent onClick={() => getPostInfo(post.id)}> */}
+            <PostContent>
+              <div>제목: {post.title}</div>
+              <div>내용: {post.content}</div>
             </PostContent>
 
-            <EditButton onClick={() => editPost(post.id)}>수정</EditButton>
+            <EditButton onClick={() => editPost(post.id, post.title, post.content)}>수정</EditButton>
             <DeleteButton
               onClick={() => {
                 deletePost(post.id);
@@ -150,7 +178,7 @@ const PostListWrapper = styled.div``;
 const PostList = styled.div`
   display: flex;
   border: 2px solid red;
-  height: 45px;
+  height: 65px;
   // text-align: center;
   align-items: center;
   // vertical-align: middle;
@@ -159,7 +187,7 @@ const PostList = styled.div`
 const PostContent = styled.div`
   display: inline-block;
   width: 500px;
-  height: 30px;
+  height: 50px;
   border: 2px solid black;
   margin-right: 10px;
   margin-left: 10px;
@@ -172,8 +200,8 @@ const PostContent = styled.div`
   }
 `;
 const DeleteButton = styled.button`
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   background-color: #9d9b9b;
   cursor: pointer;
   &:hover {
@@ -181,8 +209,8 @@ const DeleteButton = styled.button`
   }
 `;
 const EditButton = styled.button`
-  width: 50px;
-  height: 30px;
+  width: 70px;
+  height: 50px;
   margin-right: 10px;
   background-color: #9d9b9b;
   cursor: pointer;
